@@ -3,6 +3,10 @@ from bs4 import BeautifulSoup
 import re
 import urllib
 from scrapy.http import TextResponse
+from concurrent.futures import (
+    ThreadPoolExecutor,
+    as_completed
+)
 
 url_string = "https://sfbay.craigslist.org/sfc/apa/d/oakland-house-for-rent/7069370575.html"
 url_st= "https://sfbay.craigslist.org/sfc/apa/d/oakland-house-for-rent/7069370471.html"
@@ -18,51 +22,48 @@ url= "https://sfbay.craigslist.org/search/sfc/apa"
 
 urls= ["https://sfbay.craigslist.org/sfc/apa/d/pleasanton-fabulous-3-bed2bath/7073151657.html", "https://sfbay.craigslist.org/sfc/vac/d/oakland-rare-find-lodge-in-the-oakland/7071103395.html"]
 
+import logging
+import threading
+import time
 
-#this method should give 2 pic_urls to later be downloaded
-def pic_return(urls):
-      
-    pic_pairs= []  
-    pic_urls=[]
 
-    for i in range(len(urls)):
-          r= requests.get(urls[i])
-          #is the literal picture urls, supposed to have 2 of them 
-          soup = BeautifulSoup(r.text, 'html.parser')
-          div_tags= soup.findAll('div',{'id':'thumbs'})
-          s=0
-          for i in range(len(div_tags)):
-           for tag in div_tags[i].find_all('a'):
-               if s < 2:
-                pic_urls.append(tag.get('href',None))
-                s+=1
-                
-          pic_pairs.append([pic_urls[len(pic_urls)-2],pic_urls[len(pic_urls)-1]])     
+def load_url(url, timeout):
+    return [timeout+60]
 
-           
+def sqft_search(housing_urls):
+    housing_urls = housing_urls
+   #list of sqft and corresponding urls
+    sqft_urls =[]
+    for i in range(len(housing_urls)): 
+          r= requests.get(housing_urls[i]) 
+          soup= BeautifulSoup(r.text, 'html.parser')
 
-    print(pic_pairs)
-    return pic_pairs
+          spans= soup.findAll('span',{'class':'housing'})
+          if len(spans) != 0:
+            if re.search('.+\-(.+)ft.+',spans[0].text):
+              sqfts= re.findall('.+\- (.+)ft.+',spans[0].text)
+              sqft_urls.append([int(sqfts[0]), housing_urls[i]])
+              print("done")
+            else:
+               housing_urls[i]= "error"
+            spans.clear() 
 
-pic_pairs= pic_return(urls)
+                     
+    return sqft_urls
 
-def dwnloaded_pics(pic_pairs):
-  
+def runner():
+ entire_apartment_list= []
+ with ThreadPoolExecutor(max_workers=2) as executor:
+         tasks = [executor.submit(sqft_search, urls) for pagenum in range(2)]
+         for future in as_completed(tasks):
+             try:
+                 apartment_list_from_page  = future.result()
+                 if len(apartment_list_from_page) > 0:
+                    entire_apartment_list.append(apartment_list_from_page)
+             except Exception as exc:
+                raise(exc)
+ 
+ print("s")
+ return entire_apartment_list
 
- for i in range(len(pic_pairs)):
-  for j in range(len(pic_pairs[i])):
-     with open('apt'+ str(i+1)+'-'+str(j+1) +'.jpg', 'wb') as handle:
-      r = requests.get(pic_pairs[i][j], stream=True)
-      print("attempting download...")
-      if not r.ok:
-          print(r)
-
-      for block in r.iter_content(1024):
-          if not block:
-               break
-
-          handle.write(block)
-     print(handle)
- return 0
-
-dwnloaded_pics(pic_pairs)
+print(runner())

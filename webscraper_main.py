@@ -5,6 +5,7 @@ import urllib
 from scrapy.http import TextResponse
 
 #Right now one page takes 31 seconds to load
+
 def run():
     url = "https://sfbay.craigslist.org/search/sfc/apa"
 

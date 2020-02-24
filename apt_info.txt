@@ -1,15 +1,18 @@
 
-1. title:  Potrero Hill 5-Level Home | 4br | 5ba  | 3pkg | 4700sf | pool | gym
-sqft: 4700 price:  $45000 location:  (potrero hill) url:  https://sfbay.craigslist.org/sfc/apa/d/san-francisco-potrero-hill-5-level-home/7078020968.html
+1. title:  Classic Home w/ GG Bridge Views! 4+Brm, 5.5 Ba Rarely Available
+sqft: 8900 price:  $25000 location:  (pacific heights) url:  https://sfbay.craigslist.org/sfc/apa/d/san-francisco-classic-home-gg-bridge/7071466962.html
 
-2. title:  Mid Century Marvel in Sherwood Forest w/ocean view!
-sqft: 4477 price:  $17000 location:  (west portal / forest hill) url:  https://sfbay.craigslist.org/sfc/apa/d/san-francisco-mid-century-marvel-in/7075512198.html
+2. title:  Furnished Historic Home with Cottage, 6 mo. rental starting 7/1
+sqft: 6800 price:  $22000 location:  (pacific heights) url:  https://sfbay.craigslist.org/sfc/apa/d/san-francisco-furnished-historic-home/7076811034.html
 
-3. title:  Set the Stage at 2117 Broadway: Elevator Penthouse G/G View 2 Car Park
-sqft: 4000 price:  $16995 location:  (pacific heights) url:  https://sfbay.craigslist.org/sfc/apa/d/san-francisco-set-the-stage-at-2117/7076586251.html
+3. title:  10th Ave Family Home of Your Dreams!
+sqft: 5500 price:  $12500 location:  (inner richmond) url:  https://sfbay.craigslist.org/sfc/apa/d/san-francisco-10th-ave-family-home-of/7078468768.html
 
-4. title:  Pacific Heights Victorian Condo | 3br | 3ba | prkg | private deck
-sqft: 3999 price:  $12500 location:  (pacific heights) url:  https://sfbay.craigslist.org/sfc/apa/d/san-francisco-pacific-heights-victorian/7078018965.html
+4. title:  Potrero Hill 5-Level Home | 4br | 5ba  | 3pkg | 4700sf | pool | gym
+sqft: 4700 price:  $45000 location:  (potrero hill) url:  https://sfbay.craigslist.org/sfc/apa/d/san-francisco-potrero-hill-5-level-home/7080970359.html
 
-5. title:  Clay Jones Penthouse 2 Floors | Doorman | Sky Terrace | Office | 2 Car
-sqft: 3897 price:  $29500 location:  (nob hill) url:  https://sfbay.craigslist.org/sfc/apa/d/san-francisco-clay-jones-penthouse-2/7073446304.html
+5. title:  Set the Stage at 2117 Broadway: Elevator Penthouse G/G View 2 Car Park
+sqft: 4000 price:  $16995 location:  (pacific heights) url:  https://sfbay.craigslist.org/sfc/apa/d/san-francisco-set-the-stage-at-2117/7080827688.html
+
+6. title:  Pacific Heights Victorian Condo | 3br | 3ba | prkg | private deck
+sqft: 3999 price:  $12500 location:  (pacific heights) url:  https://sfbay.craigslist.org/sfc/apa/d/san-francisco-pacific-heights-victorian/7080970654.html
