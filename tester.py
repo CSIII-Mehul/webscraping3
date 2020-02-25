@@ -51,10 +51,47 @@ def sqft_search(housing_urls):
                      
     return sqft_urls
 
+def next_page(url):
+    r= requests.get(url)
+    new_url= ""
+    soup = BeautifulSoup(r.text, 'html.parser')
+    a_tags= soup.findAll('a',{'class':'button next'})
+    for tag in a_tags:
+        new_url = tag.get('href', None)
+    
+    
+    return "https://sfbay.craigslist.org"+ new_url
+
+def souper(url):
+    r= requests.get(url)
+    soup = BeautifulSoup(r.text, 'html.parser')
+    ul_tags = soup.findAll('ul',{'class':'rows'})
+    s=0
+
+    #supposed to have the urls for the 1 page
+    housing_urls= []
+    li_tags= soup.findAll('li',{'class':'result-row'})
+    for i in range(len(li_tags)):
+      for tag in li_tags[i].find_all('a'):
+           if s%3 == 0:
+             housing_urls.append(tag.get('href',None))
+           s+=1       
+    
+    return housing_urls
+
 def runner():
+ url= "https://sfbay.craigslist.org/search/sfc/apa"
+ pages=[url]
+ for i in range(24):
+    url= next_page(url)
+    pages.append(url)
+    if i==23:
+        break
+
+ print(pages)
  entire_apartment_list= []
- with ThreadPoolExecutor(max_workers=2) as executor:
-         tasks = [executor.submit(sqft_search, urls) for pagenum in range(2)]
+ with ThreadPoolExecutor(max_workers=3) as executor:
+         tasks = [executor.submit(souper, pages[pagenum]) for pagenum in range(4)]
          for future in as_completed(tasks):
              try:
                  apartment_list_from_page  = future.result()
@@ -64,6 +101,9 @@ def runner():
                 raise(exc)
  
  print("s")
- return entire_apartment_list
+ #flattens the apts urls 
+ entire_apartment_list=sum(entire_apartment_list,[])
+ return len(entire_apartment_list)
+
 
 print(runner())
