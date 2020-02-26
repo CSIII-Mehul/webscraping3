@@ -90,8 +90,8 @@ def runner():
 
  print(pages)
  entire_apartment_list= []
- with ThreadPoolExecutor(max_workers=3) as executor:
-         tasks = [executor.submit(souper, pages[pagenum]) for pagenum in range(4)]
+ with ThreadPoolExecutor(max_workers=23) as executor:
+         tasks = [executor.submit(souper, pages[pagenum]) for pagenum in range(24)]
          for future in as_completed(tasks):
              try:
                  apartment_list_from_page  = future.result()
@@ -100,10 +100,35 @@ def runner():
              except Exception as exc:
                 raise(exc)
  
- print("s")
+ 
  #flattens the apts urls 
- entire_apartment_list=sum(entire_apartment_list,[])
- return len(entire_apartment_list)
+ #entire_apartment_list=sum(entire_apartment_list,[])
+ 
+ ordered_sqft= []
+ with ThreadPoolExecutor(max_workers=23) as executor:
+         tasks = [executor.submit(sqft_search, entire_apartment_list[pagenum]) for pagenum in range(24)]
+         for future in as_completed(tasks):
+             try:
+                 sqft_from_page  = future.result()
+                 if len(sqft_from_page) > 0:
+                    ordered_sqft.append(sqft_from_page)
+             except Exception as exc:
+                raise(exc)
+  
+ 
 
+ return ordered_sqft
+
+
+def rank_sqft(sqft_urls):
+ 
+  sqft_urls.sort() 
+  sqft_urls.reverse()      
+  #print(sqft_urls[0][0])
+  
+
+  ranks= sqft_urls
+  
+  return ranks
 
 print(runner())
