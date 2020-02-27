@@ -7,6 +7,8 @@ from concurrent.futures import (
     ThreadPoolExecutor,
     as_completed
 )
+from itertools import chain
+
 
 url_string = "https://sfbay.craigslist.org/sfc/apa/d/oakland-house-for-rent/7069370575.html"
 url_st= "https://sfbay.craigslist.org/sfc/apa/d/oakland-house-for-rent/7069370471.html"
@@ -90,8 +92,8 @@ def runner():
 
  print(pages)
  entire_apartment_list= []
- with ThreadPoolExecutor(max_workers=23) as executor:
-         tasks = [executor.submit(souper, pages[pagenum]) for pagenum in range(24)]
+ with ThreadPoolExecutor(max_workers=24) as executor:
+         tasks = [executor.submit(souper, pages[pagenum]) for pagenum in range(25)]
          for future in as_completed(tasks):
              try:
                  apartment_list_from_page  = future.result()
@@ -105,8 +107,8 @@ def runner():
  #entire_apartment_list=sum(entire_apartment_list,[])
  
  ordered_sqft= []
- with ThreadPoolExecutor(max_workers=23) as executor:
-         tasks = [executor.submit(sqft_search, entire_apartment_list[pagenum]) for pagenum in range(24)]
+ with ThreadPoolExecutor(max_workers=24) as executor:
+         tasks = [executor.submit(sqft_search, entire_apartment_list[pagenum]) for pagenum in range(25)]
          for future in as_completed(tasks):
              try:
                  sqft_from_page  = future.result()
@@ -114,21 +116,36 @@ def runner():
                     ordered_sqft.append(sqft_from_page)
              except Exception as exc:
                 raise(exc)
-  
- 
+
+
+ ordered_sqft = chain(*ordered_sqft)
+ ordered_sqft = list(ordered_sqft)
+ ordered_sqft.sort()
+ ordered_sqft.reverse()
+ ordered_sqft=repeat_check(ordered_sqft)
+
 
  return ordered_sqft
 
+def repeat_check(sqft_urls):
+     no_repeats = sqft_urls
+     url_string = ""
+     removing = []
+     for i in range(len(sqft_urls) - 1):
+         j = i + 1
+         url_string = sqft_urls[i][1]
+         url_st = sqft_urls[j][1]
+         # re.search('.+\/d/(.+)\/.+',url_string)
+         lists = re.findall('.+\/d/(.+)\/.+', url_string)
+         temp = re.findall('.+\/d/(.+)\/.+', url_st)
+         if lists[0] == temp[0]:
+             # print("check")
+             removing.append([sqft_urls[j][0], sqft_urls[j][1]])
 
-def rank_sqft(sqft_urls):
- 
-  sqft_urls.sort() 
-  sqft_urls.reverse()      
-  #print(sqft_urls[0][0])
-  
+     for counter in range(len(removing)):
+         no_repeats.remove(removing[counter])
 
-  ranks= sqft_urls
-  
-  return ranks
+     return no_repeats
+
 
 print(runner())

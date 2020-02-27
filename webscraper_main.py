@@ -3,36 +3,55 @@ from bs4 import BeautifulSoup
 import re
 import urllib
 from scrapy.http import TextResponse
+from concurrent.futures import (
+    ThreadPoolExecutor,
+    as_completed
+)
+from itertools import chain
+
 
 #Right now one page takes 31 seconds to load
 
 def run():
     url = "https://sfbay.craigslist.org/search/sfc/apa"
-
-    housing_urls= []
-    sqft_urls= [] 
-    section_ranked=[]
-    #all of the apts
-    ranked = []
-    final_ranks=[]
-    apts= []
-    #goes through 24 pages of craigslist  
+    pages = [url]
     for i in range(24):
-          housing_urls=souper(url)
-          sqft_urls=sqft_search(housing_urls)
-          section_ranked= rank_sqft(sqft_urls)
-          for j in range(len(section_ranked)):
-             ranked.append(section_ranked[j])
+        url = next_page(url)
+        pages.append(url)
+        if i == 23:
+            break
 
-          #check for all pages at home  
-          if i < 23:
-              url= next_page(url)
-          else: 
-             break
- 
+    print(pages)
+    entire_apartment_list = []
+    with ThreadPoolExecutor(max_workers=24) as executor:
+        tasks = [executor.submit(souper, pages[pagenum]) for pagenum in range(25)]
+        for future in as_completed(tasks):
+            try:
+                apartment_list_from_page = future.result()
+                if len(apartment_list_from_page) > 0:
+                    entire_apartment_list.append(apartment_list_from_page)
+            except Exception as exc:
+                raise (exc)
+
+    # flattens the apts urls
+    # entire_apartment_list=sum(entire_apartment_list,[])
+
+    ordered_sqft = []
+    with ThreadPoolExecutor(max_workers=24) as executor:
+        tasks = [executor.submit(sqft_search, entire_apartment_list[pagenum]) for pagenum in range(25)]
+        for future in as_completed(tasks):
+            try:
+                sqft_from_page = future.result()
+                if len(sqft_from_page) > 0:
+                    ordered_sqft.append(sqft_from_page)
+            except Exception as exc:
+                raise (exc)
+
+    ordered_sqft = chain(*ordered_sqft)
+    ordered_sqft = list(ordered_sqft)
 
     #this invocation of the method orders all of the apartments by sqft
-    final_ranks=rank_sqft(ranked)   
+    final_ranks=rank_sqft(ordered_sqft)
    
     #info of sqft apartments w/o pictures and urls 
     apts, urls=info_of_apts(final_ranks)
