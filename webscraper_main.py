@@ -230,7 +230,7 @@ def pic_return(urls):
 def dwnloaded_pics(pic_pairs):
   
 
- for i in range(len(pic_pairs)):
+ for i in range(len(pic_pairs)-1):
   for j in range(len(pic_pairs[i])):
      with open('apt'+ str(i+1)+'-'+str(j+1) +'.jpg', 'wb') as handle:
       r = requests.get(pic_pairs[i][j], stream=True)

@@ -13,6 +13,3 @@ sqft: 4700 price:  $45000 location:  (potrero hill) url:  https://sfbay.craigsli
 
 5. title:  Set the Stage at 2117 Broadway: Elevator Penthouse G/G View 2 Car Park
 sqft: 4000 price:  $16995 location:  (pacific heights) url:  https://sfbay.craigslist.org/sfc/apa/d/san-francisco-set-the-stage-at-2117/7080827688.html
-
-6. title:  Pacific Heights Victorian Condo | 3br | 3ba | prkg | private deck
-sqft: 3999 price:  $12500 location:  (pacific heights) url:  https://sfbay.craigslist.org/sfc/apa/d/san-francisco-pacific-heights-victorian/7082938911.html
