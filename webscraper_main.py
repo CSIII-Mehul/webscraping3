@@ -10,7 +10,7 @@ from concurrent.futures import (
 from itertools import chain
 
 
-#Right now one page takes 31 seconds to load
+
 
 def run():
     url = "https://sfbay.craigslist.org/search/sfc/apa"
@@ -78,10 +78,6 @@ def run():
 
         storage_file.write("\n")
 
-
-
-
-    # with pictures
 
          
 
